@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
+const authenticateToken = require('../middleware/auth');
 
-// GET all habits for a user
-router.get('/', async (req, res) => {
+// GET all habits for logged-in user
+router.get('/', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query(
       'SELECT * FROM habits WHERE user_id = $1 ORDER BY created_at DESC',
-      [1] // hardcoded for now, will use real user id after auth
+      [req.user.userId]
     );
     res.json(result.rows);
   } catch (err) {
@@ -16,12 +17,12 @@ router.get('/', async (req, res) => {
 });
 
 // POST create a new habit
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   const { name, description } = req.body;
   try {
     const result = await pool.query(
       'INSERT INTO habits (user_id, name, description) VALUES ($1, $2, $3) RETURNING *',
-      [1, name, description] // hardcoded for now
+      [req.user.userId, name, description]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -30,13 +31,13 @@ router.post('/', async (req, res) => {
 });
 
 // PUT update a habit
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { name, description } = req.body;
   try {
     const result = await pool.query(
-      'UPDATE habits SET name = $1, description = $2 WHERE id = $3 RETURNING *',
-      [name, description, id]
+      'UPDATE habits SET name = $1, description = $2 WHERE id = $3 AND user_id = $4 RETURNING *',
+      [name, description, id, req.user.userId]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -45,10 +46,13 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE a habit
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
-    await pool.query('DELETE FROM habits WHERE id = $1', [id]);
+    await pool.query(
+      'DELETE FROM habits WHERE id = $1 AND user_id = $2',
+      [id, req.user.userId]
+    );
     res.json({ message: 'Habit deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -56,7 +60,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // POST mark habit as done today
-router.post('/:id/log', async (req, res) => {
+router.post('/:id/log', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const today = new Date().toISOString().split('T')[0];
   try {
