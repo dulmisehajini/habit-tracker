@@ -1,16 +1,35 @@
-# React + Vite
+# 🔥 HabitFlow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application to build and track daily habits, visualize streaks, and stay consistent with your goals.
 
-Currently, two official plugins are available:
+## 🌐 Live Demo
+**Frontend:** https://habit-tracker-five-plum.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+> Note: Backend runs locally. To test the full app, clone the repo and follow the setup instructions below.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- 🔐 **User authentication** — secure register and login with JWT
+- ✅ **Habit management** — create, edit, and delete habits
+- 🔥 **Streak tracking** — see your current streak per habit
+- 📅 **7-day history** — visual calendar of completions per habit
+- 📊 **Daily summary** — see how many habits you completed today
+- 📱 **Responsive design** — works on mobile and desktop
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React + Vite, React Router, Axios, Tailwind CSS |
+| Backend | Node.js, Express.js |
+| Database | PostgreSQL (Supabase) |
+| Auth | JWT + bcrypt |
+| Deployment | Vercel (frontend) + Supabase (database) |
+
+---
+
+## Project Structure
